@@ -1,0 +1,22 @@
+{
+  "description": "tabindex above 0 and autofocus outside a dialog",
+  "input": {
+    "subject-type": "page",
+    "subject": "<html lang=\"en\"><head><title>T</title></head><body><main><h1>T</h1><a href=\"/a\" tabindex=\"2\">A</a><label>Search <input type=\"search\" autofocus></label></main></body></html>"
+  },
+  "expected": {
+    "status": "ok",
+    "standard-version": "0.1.0",
+    "results": {
+      "focus-order": {
+        "status": "fail"
+      },
+      "no-autofocus": {
+        "status": "fail"
+      },
+      "form-labels": {
+        "status": "pass"
+      }
+    }
+  }
+}

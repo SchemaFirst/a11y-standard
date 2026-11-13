@@ -1,0 +1,363 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.schemafirst.org/schemas/a11y-standard.schema.json",
+  "title": "SchemaFirst A11y Standard",
+  "description": "Structure of the SchemaFirst A11y Standard document.",
+  "type": "object",
+  "required": [
+    "$id",
+    "name",
+    "id",
+    "version",
+    "status",
+    "repository",
+    "conformance-target",
+    "inputs",
+    "requirement-levels",
+    "detection-methods",
+    "categories",
+    "rules",
+    "evaluation",
+    "result-statuses",
+    "provenance-classes",
+    "organization-profile",
+    "versioning",
+    "references"
+  ],
+  "$defs": {
+    "kebab": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "requirement": {
+      "enum": [
+        "required",
+        "recommended",
+        "optional"
+      ]
+    },
+    "subject-type": {
+      "enum": [
+        "page",
+        "email"
+      ]
+    },
+    "detection-method": {
+      "enum": [
+        "code-analysis",
+        "rendered-analysis",
+        "manual-review"
+      ]
+    },
+    "result-status": {
+      "enum": [
+        "pass",
+        "fail",
+        "not-applicable",
+        "requires-review"
+      ]
+    },
+    "parameter": {
+      "type": "object",
+      "required": [
+        "default",
+        "unit",
+        "overridable",
+        "description"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "default": {
+          "type": "number"
+        },
+        "unit": {
+          "enum": [
+            "ratio",
+            "css-px",
+            "ms"
+          ]
+        },
+        "overridable": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "rule": {
+      "type": "object",
+      "required": [
+        "name",
+        "category",
+        "requirement",
+        "applies-to",
+        "wcag",
+        "wcag-level",
+        "basis",
+        "detection",
+        "rule",
+        "check",
+        "a11y-project"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "category": {
+          "$ref": "#/$defs/kebab"
+        },
+        "requirement": {
+          "$ref": "#/$defs/requirement"
+        },
+        "applies-to": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/subject-type"
+          }
+        },
+        "wcag": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[1-4]\\.[0-9]+\\.[0-9]+$"
+          }
+        },
+        "wcag-level": {
+          "enum": [
+            "A",
+            "AA",
+            "AAA",
+            "none"
+          ]
+        },
+        "basis": {
+          "enum": [
+            "wcag-defined",
+            "schemafirst-default"
+          ]
+        },
+        "detection": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/detection-method"
+          }
+        },
+        "rule": {
+          "type": "string"
+        },
+        "check": {
+          "type": "string"
+        },
+        "a11y-project": {
+          "type": "boolean",
+          "description": "True when the rule corresponds to an item in The A11Y Project Checklist."
+        },
+        "parameters": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/kebab"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/parameter"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "basis": {
+                "const": "wcag-defined"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "wcag": {
+                "minItems": 1
+              },
+              "wcag-level": {
+                "enum": [
+                  "A",
+                  "AA",
+                  "AAA"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "response": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "ok",
+            "requires-context",
+            "unknown-rule"
+          ]
+        }
+      }
+    }
+  },
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "$id": {
+      "type": "string",
+      "format": "uri"
+    },
+    "name": {
+      "const": "SchemaFirst A11y Standard"
+    },
+    "id": {
+      "const": "a11y"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "for-comment",
+        "stable",
+        "deprecated"
+      ]
+    },
+    "updated-at": {
+      "type": "string",
+      "format": "date"
+    },
+    "repository": {
+      "type": "string",
+      "format": "uri"
+    },
+    "license": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "principle": {
+      "type": "string"
+    },
+    "conformance-target": {
+      "type": "object",
+      "required": [
+        "wcag-version",
+        "wcag-level",
+        "statement"
+      ],
+      "properties": {
+        "wcag-version": {
+          "const": "2.2"
+        },
+        "wcag-level": {
+          "enum": [
+            "A",
+            "AA",
+            "AAA"
+          ]
+        },
+        "statement": {
+          "type": "string"
+        }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "required": [
+        "required",
+        "optional",
+        "definitions"
+      ]
+    },
+    "requirement-levels": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/requirement"
+      }
+    },
+    "detection-methods": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/detection-method"
+      }
+    },
+    "categories": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/kebab"
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "rules": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "$ref": "#/$defs/kebab"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/rule"
+      }
+    },
+    "evaluation": {
+      "type": "object",
+      "required": [
+        "steps",
+        "missing-context",
+        "unknown-rule",
+        "success-response"
+      ]
+    },
+    "result-statuses": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/result-status"
+      }
+    },
+    "provenance-classes": {
+      "type": "object",
+      "required": [
+        "wcag-defined",
+        "schemafirst-default",
+        "organization-defined"
+      ]
+    },
+    "organization-profile": {
+      "type": "object"
+    },
+    "versioning": {
+      "type": "object",
+      "required": [
+        "scheme"
+      ]
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "url",
+          "covers"
+        ]
+      }
+    }
+  }
+}

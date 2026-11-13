@@ -1,0 +1,16 @@
+{
+  "description": "One image has no alt; decorative empty alt is allowed",
+  "input": {
+    "subject-type": "page",
+    "subject": "<html lang=\"en\"><head><title>T</title></head><body><main><h1>T</h1><img src=\"a.png\" alt=\"\"><img src=\"b.png\"></main></body></html>"
+  },
+  "expected": {
+    "status": "ok",
+    "standard-version": "0.1.0",
+    "results": {
+      "images-alt-present": {
+        "status": "fail"
+      }
+    }
+  }
+}

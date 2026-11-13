@@ -1,0 +1,16 @@
+{
+  "description": "Page has headings but no h1",
+  "input": {
+    "subject-type": "page",
+    "subject": "<html lang=\"en\"><head><title>T</title></head><body><main><h2>Section</h2></main></body></html>"
+  },
+  "expected": {
+    "status": "ok",
+    "standard-version": "0.1.0",
+    "results": {
+      "h1-present": {
+        "status": "fail"
+      }
+    }
+  }
+}

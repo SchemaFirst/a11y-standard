@@ -1,0 +1,19 @@
+{
+  "description": "Image rules do not apply when there are no images",
+  "input": {
+    "subject-type": "page",
+    "subject": "<html lang=\"en\"><head><title>T</title></head><body><main><h1>T</h1><p>Text only.</p></main></body></html>"
+  },
+  "expected": {
+    "status": "ok",
+    "standard-version": "0.1.0",
+    "results": {
+      "images-alt-present": {
+        "status": "not-applicable"
+      },
+      "form-labels": {
+        "status": "not-applicable"
+      }
+    }
+  }
+}

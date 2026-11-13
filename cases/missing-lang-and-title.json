@@ -1,0 +1,19 @@
+{
+  "description": "No lang attribute and an empty title",
+  "input": {
+    "subject-type": "page",
+    "subject": "<html><head><title> </title></head><body><main><h1>Hi</h1></main></body></html>"
+  },
+  "expected": {
+    "status": "ok",
+    "standard-version": "0.1.0",
+    "results": {
+      "page-language": {
+        "status": "fail"
+      },
+      "page-title": {
+        "status": "fail"
+      }
+    }
+  }
+}

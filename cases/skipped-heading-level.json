@@ -1,0 +1,22 @@
+{
+  "description": "h1 followed directly by h3; no main landmark",
+  "input": {
+    "subject-type": "page",
+    "subject": "<html lang=\"en\"><head><title>T</title></head><body><h1>T</h1><h3>Detail</h3></body></html>"
+  },
+  "expected": {
+    "status": "ok",
+    "standard-version": "0.1.0",
+    "results": {
+      "heading-hierarchy": {
+        "status": "fail"
+      },
+      "landmarks": {
+        "status": "fail"
+      },
+      "h1-present": {
+        "status": "pass"
+      }
+    }
+  }
+}

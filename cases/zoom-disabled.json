@@ -1,0 +1,16 @@
+{
+  "description": "Viewport blocks zoom",
+  "input": {
+    "subject-type": "page",
+    "subject": "<html lang=\"en\"><head><title>T</title><meta name=\"viewport\" content=\"width=device-width, maximum-scale=1, user-scalable=no\"></head><body><main><h1>T</h1></main></body></html>"
+  },
+  "expected": {
+    "status": "ok",
+    "standard-version": "0.1.0",
+    "results": {
+      "viewport-zoom-enabled": {
+        "status": "fail"
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "description": "lang is not a BCP 47 tag",
+  "input": {
+    "subject-type": "page",
+    "subject": "<html lang=\"english_us\"><head><title>T</title></head><body><main><h1>T</h1></main></body></html>"
+  },
+  "expected": {
+    "status": "ok",
+    "standard-version": "0.1.0",
+    "results": {
+      "page-language": {
+        "status": "fail"
+      }
+    }
+  }
+}

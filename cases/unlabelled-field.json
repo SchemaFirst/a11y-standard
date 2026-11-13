@@ -1,0 +1,16 @@
+{
+  "description": "Placeholder is not a label",
+  "input": {
+    "subject-type": "page",
+    "subject": "<html lang=\"en\"><head><title>T</title></head><body><main><h1>T</h1><input type=\"text\" placeholder=\"Name\"><input type=\"hidden\" name=\"t\"><select aria-label=\"Country\"></select></main></body></html>"
+  },
+  "expected": {
+    "status": "ok",
+    "standard-version": "0.1.0",
+    "results": {
+      "form-labels": {
+        "status": "fail"
+      }
+    }
+  }
+}

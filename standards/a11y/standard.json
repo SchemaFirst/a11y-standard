@@ -1,0 +1,1231 @@
+{
+  "$schema": "https://www.schemafirst.org/schemas/a11y-standard.schema.json",
+  "$id": "https://www.schemafirst.org/standards/a11y/0.1",
+  "name": "SchemaFirst A11y Standard",
+  "id": "a11y",
+  "version": "0.1.0",
+  "status": "draft",
+  "updated-at": "2026-11-12",
+  "repository": "https://github.com/SchemaFirst/a11y-standard",
+  "license": "Apache-2.0",
+  "summary": "Deterministic accessibility rules for web pages and HTML email, built on WCAG 2.2 Level AA. Given the same subject and the same standard, two conforming evaluators report the same result for every automatable rule.",
+  "principle": "Same subject + same standard = same result.",
+  "conformance-target": {
+    "wcag-version": "2.2",
+    "wcag-level": "AA",
+    "statement": "A subject conforms when every `required` rule that applies to it is `pass` or `not-applicable`. Rules marked AAA or with `wcag-level` `none` never decide WCAG conformance; they report alongside it."
+  },
+  "inputs": {
+    "required": [
+      "subject",
+      "subject-type"
+    ],
+    "optional": [
+      "organization-profile",
+      "rules"
+    ],
+    "definitions": {
+      "subject": "What is evaluated: an absolute URL or rendered HTML for a page; the raw MIME message or HTML body for an email.",
+      "subject-type": "`page` or `email`. Selects the rules whose `applies-to` includes it.",
+      "organization-profile": "Organization overrides, as defined in `organization-profile`.",
+      "rules": "A subset of rule ids to evaluate. Defaults to every rule that applies to the subject type."
+    }
+  },
+  "requirement-levels": {
+    "required": "Must pass for the subject to conform.",
+    "recommended": "Should pass. Reported, but does not decide conformance.",
+    "optional": "Reported only when requested or enabled by the organization profile."
+  },
+  "detection-methods": {
+    "code-analysis": "Decided from the source markup alone.",
+    "rendered-analysis": "Decided from the rendered page or email: computed styles, layout, screenshots, or scripted keyboard input.",
+    "manual-review": "Needs human judgment. An automated evaluator returns `requires-review` unless it can decide the case from code or rendering."
+  },
+  "categories": {
+    "content": "Wording of text, links and buttons.",
+    "global-code": "Document-level code that affects the whole page or view.",
+    "keyboard": "Operating and navigating without a pointer.",
+    "images": "Text alternatives for non-text content.",
+    "headings": "Heading structure.",
+    "lists": "List structure.",
+    "tables": "Data table structure.",
+    "controls": "Links, buttons and widgets.",
+    "forms": "Form fields, labels and errors.",
+    "media": "Video and audio.",
+    "appearance": "Color, size, spacing and layout.",
+    "animation": "Motion and flashing.",
+    "color-contrast": "Contrast ratios.",
+    "mobile-and-touch": "Touch targets, orientation and gestures.",
+    "assistive-technology": "Behavior with screen readers and other assistive technology.",
+    "email": "Rules specific to HTML email."
+  },
+  "rules": {
+    "link-purpose": {
+      "name": "Links say where they go",
+      "category": "content",
+      "requirement": "required",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "2.4.4"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis",
+        "manual-review"
+      ],
+      "rule": "Every link's purpose can be determined from its text, or from its text together with its programmatically determined context.",
+      "check": "Fail a link whose accessible name is generic (\"click here\", \"read more\", \"learn more\", a bare URL) and whose surrounding sentence, list item, table cell or heading does not say where it goes (WCAG failure F63).",
+      "a11y-project": true
+    },
+    "control-names-unique": {
+      "name": "Buttons and links are distinguishable",
+      "category": "content",
+      "requirement": "recommended",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "2.4.6",
+        "2.4.9"
+      ],
+      "wcag-level": "AA",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "Buttons, links and labels that do different things have different, descriptive text.",
+      "check": "Fail when two or more links or buttons share an accessible name but lead to different destinations or perform different actions.",
+      "a11y-project": true
+    },
+    "plain-language": {
+      "name": "Content uses plain language",
+      "category": "content",
+      "requirement": "optional",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "3.1.5"
+      ],
+      "wcag-level": "AAA",
+      "basis": "wcag-defined",
+      "detection": [
+        "manual-review"
+      ],
+      "rule": "Body content is written in plain language at about a lower-secondary reading level, without idioms or figures of speech that do not translate.",
+      "check": "Review body content for reading level, idioms, jargon and undefined abbreviations.",
+      "a11y-project": true
+    },
+    "text-alignment": {
+      "name": "Body text is not justified",
+      "category": "content",
+      "requirement": "optional",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "1.4.8"
+      ],
+      "wcag-level": "AAA",
+      "basis": "wcag-defined",
+      "detection": [
+        "rendered-analysis"
+      ],
+      "rule": "Body text is aligned to the start edge of its language (left for LTR, right for RTL) and is not justified or centered in blocks of more than one line.",
+      "check": "Fail a paragraph of body text longer than one line with text-align justify or center.",
+      "a11y-project": true
+    },
+    "valid-markup": {
+      "name": "Markup is well formed",
+      "category": "global-code",
+      "requirement": "recommended",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [],
+      "wcag-level": "none",
+      "basis": "schemafirst-default",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "Markup parses without errors that change the accessibility tree: no duplicate IDs referenced by ARIA or labels, no improperly nested interactive elements.",
+      "check": "Fail duplicate id values that are referenced by for, aria-labelledby or aria-describedby, and interactive elements nested inside other interactive elements. WCAG 2.2 removed 4.1.1 Parsing; this rule keeps the parts that still affect assistive technology.",
+      "a11y-project": true
+    },
+    "page-language": {
+      "name": "Page declares its language",
+      "category": "global-code",
+      "requirement": "required",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "3.1.1",
+        "3.1.2"
+      ],
+      "wcag-level": "AA",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "The html element has a lang attribute with a valid BCP 47 language tag, and passages in another language carry their own lang.",
+      "check": "Fail when <html> has no lang attribute, an empty one, or a value that is not a valid BCP 47 tag.",
+      "a11y-project": true
+    },
+    "page-title": {
+      "name": "Page has a descriptive title",
+      "category": "global-code",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "2.4.2"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis",
+        "manual-review"
+      ],
+      "rule": "Every page or view has a title element that describes its topic or purpose and differs from other pages' titles.",
+      "check": "Fail when <title> is missing or empty. Flag for review a title that is only the site name.",
+      "a11y-project": true
+    },
+    "viewport-zoom-enabled": {
+      "name": "Zoom is not disabled",
+      "category": "global-code",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "1.4.4"
+      ],
+      "wcag-level": "AA",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "The viewport does not prevent people from zooming.",
+      "check": "Fail a meta viewport whose content sets user-scalable=no (or 0) or a maximum-scale below 2.",
+      "a11y-project": true
+    },
+    "landmarks": {
+      "name": "Page regions use landmarks",
+      "category": "global-code",
+      "requirement": "recommended",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "1.3.1"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "Major regions use landmark elements: one main, plus header, nav and footer where those regions exist.",
+      "check": "Fail a page with no <main> element (or role=main), or with more than one visible main landmark.",
+      "a11y-project": true
+    },
+    "bypass-blocks": {
+      "name": "Repeated navigation can be skipped",
+      "category": "global-code",
+      "requirement": "recommended",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "2.4.1"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "Keyboard users can skip blocks repeated across pages, through a skip link to the main content or through landmarks.",
+      "check": "Pass when the first focusable element is a working in-page link to the main content, or the page has a main landmark. Fail when a skip link's target does not exist.",
+      "a11y-project": true
+    },
+    "focus-order": {
+      "name": "Focus order follows the layout",
+      "category": "global-code",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "2.4.3",
+        "1.3.2"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis",
+        "manual-review"
+      ],
+      "rule": "Keyboard focus moves through the page in an order that matches its visual and reading order.",
+      "check": "Fail any tabindex value greater than 0. Review that the tab sequence matches the visual layout.",
+      "a11y-project": true
+    },
+    "no-autofocus": {
+      "name": "Focus is not moved on load",
+      "category": "global-code",
+      "requirement": "recommended",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "2.4.3",
+        "3.2.1"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "Pages do not move focus without the person's action.",
+      "check": "Fail an autofocus attribute on any element outside a dialog that the person opened.",
+      "a11y-project": true
+    },
+    "timing-adjustable": {
+      "name": "Time limits can be extended",
+      "category": "global-code",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "2.2.1"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "manual-review"
+      ],
+      "rule": "Where a time limit exists, the person can turn it off, adjust it, or extend it before it expires.",
+      "check": "Review session timeouts and timed content for a warning with a way to extend of at least 20 seconds.",
+      "a11y-project": true
+    },
+    "no-title-tooltips": {
+      "name": "Important information is not only in a title attribute",
+      "category": "global-code",
+      "requirement": "optional",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [],
+      "wcag-level": "none",
+      "basis": "schemafirst-default",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "Information people need is not conveyed only through a title attribute tooltip. Labelling an iframe is the acceptable use.",
+      "check": "Flag title attributes on elements other than iframe whose text appears nowhere else in the element's accessible name or description.",
+      "a11y-project": true
+    },
+    "keyboard-operable": {
+      "name": "Everything works from the keyboard",
+      "category": "keyboard",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "2.1.1"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "rendered-analysis",
+        "manual-review"
+      ],
+      "rule": "Every function available by pointer is available by keyboard: links, buttons, form controls, menus, dialogs, tabs, accordions and custom widgets.",
+      "check": "Tab, Shift+Tab, Enter, Space, Escape and arrow keys reach and operate every interactive element. Fail any pointer-only control.",
+      "a11y-project": true
+    },
+    "no-keyboard-trap": {
+      "name": "Keyboard focus is never trapped",
+      "category": "keyboard",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "2.1.2"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "rendered-analysis",
+        "manual-review"
+      ],
+      "rule": "Focus can always leave any component using standard keys, and a modal dialog returns focus when closed.",
+      "check": "Tab through the whole page and every opened dialog or widget. Fail when focus cannot leave a component with Tab, Shift+Tab or Escape.",
+      "a11y-project": true
+    },
+    "focus-visible": {
+      "name": "Keyboard focus is visible",
+      "category": "keyboard",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "2.4.7",
+        "2.4.11"
+      ],
+      "wcag-level": "AA",
+      "basis": "wcag-defined",
+      "detection": [
+        "rendered-analysis"
+      ],
+      "rule": "Every focusable element shows a visible focus indicator, and the focused element is not entirely hidden by sticky headers, banners or other content.",
+      "check": "Fail an element whose focused and unfocused renderings are identical, or that is fully covered by author content when focused.",
+      "a11y-project": true
+    },
+    "no-hidden-focusable": {
+      "name": "Hidden elements cannot receive focus",
+      "category": "keyboard",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "2.4.3",
+        "4.1.2"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis",
+        "rendered-analysis"
+      ],
+      "rule": "Elements that are not visible or not meant to be discoverable (closed menus, off-screen navigation, inactive dialogs, aria-hidden content) cannot receive focus.",
+      "check": "Fail a focusable element that is inside aria-hidden=\"true\", or that receives focus while invisible or off-screen.",
+      "a11y-project": true
+    },
+    "images-alt-present": {
+      "name": "Images have an alt attribute",
+      "category": "images",
+      "requirement": "required",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "1.1.1"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "Every img element has an alt attribute. Decorative images use an empty alt (alt=\"\").",
+      "check": "Fail an <img> without an alt attribute, an <input type=\"image\"> without alt, or a role=\"img\" element without an accessible name.",
+      "a11y-project": true
+    },
+    "alt-text-descriptive": {
+      "name": "Alt text describes the image",
+      "category": "images",
+      "requirement": "required",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "1.1.1"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis",
+        "manual-review"
+      ],
+      "rule": "Alt text conveys the image's content or function, includes any text shown in the image, and is not a file name, URL or placeholder.",
+      "check": "Fail alt text that is a file name or URL, or a placeholder such as \"image\", \"photo\", \"graphic\" or \"spacer\" (WCAG failure F30). Review the rest for meaning.",
+      "a11y-project": true
+    },
+    "complex-images-described": {
+      "name": "Charts and maps have a text alternative",
+      "category": "images",
+      "requirement": "recommended",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "1.1.1"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "manual-review"
+      ],
+      "rule": "Charts, graphs, maps and diagrams have a text alternative that gives the same information: axes, data points, labels and the conclusion.",
+      "check": "Review each complex image for an adjacent description, data table or linked long description.",
+      "a11y-project": true
+    },
+    "h1-present": {
+      "name": "Page has one main heading",
+      "category": "headings",
+      "requirement": "recommended",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "1.3.1",
+        "2.4.6"
+      ],
+      "wcag-level": "AA",
+      "basis": "schemafirst-default",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "Each page has an h1 that names its main content.",
+      "check": "Fail a page with no <h1>. WCAG does not require an h1; SchemaFirst does by default.",
+      "a11y-project": true
+    },
+    "heading-hierarchy": {
+      "name": "Headings are in logical order",
+      "category": "headings",
+      "requirement": "recommended",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "1.3.1",
+        "2.4.6"
+      ],
+      "wcag-level": "AA",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "Headings introduce content and their levels nest without skipping (h2 follows h1, h3 follows h2).",
+      "check": "Fail a heading whose level is more than one deeper than the previous heading, and an empty heading.",
+      "a11y-project": true
+    },
+    "lists-marked-up": {
+      "name": "Lists use list markup",
+      "category": "lists",
+      "requirement": "recommended",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "1.3.1"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis",
+        "manual-review"
+      ],
+      "rule": "Content that is visually a list uses ul, ol or dl, and list elements contain only list items.",
+      "check": "Fail a ul or ol with direct children other than li, script or template. Review runs of lines starting with bullets or numbers in plain text.",
+      "a11y-project": true
+    },
+    "data-tables-structured": {
+      "name": "Data tables have headers",
+      "category": "tables",
+      "requirement": "required",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "1.3.1"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "Data tables use th for header cells with scope (or headers/id for complex tables) and a caption; layout tables are not used on pages.",
+      "check": "Fail a table with more than one row and column of data and no th. In email, layout tables must have role=\"presentation\".",
+      "a11y-project": true
+    },
+    "aria-valid": {
+      "name": "ARIA is used correctly",
+      "category": "controls",
+      "requirement": "required",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "4.1.2"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "Native elements are used where they exist; where ARIA is used, roles are valid, required attributes are present, and states match what is shown.",
+      "check": "Fail an invalid role value, an ARIA attribute not allowed on its role, a missing required attribute, or an aria-labelledby/aria-describedby that points to a missing id.",
+      "a11y-project": true
+    },
+    "links-distinguishable": {
+      "name": "Links stand out from body text",
+      "category": "controls",
+      "requirement": "required",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "1.4.1"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "rendered-analysis"
+      ],
+      "rule": "Links inside text are distinguishable by more than color: an underline or other visual cue, or 3:1 contrast with surrounding text plus a cue on hover and focus.",
+      "check": "Fail an in-text link with no underline or other non-color cue whose color is below 3:1 against the surrounding text.",
+      "a11y-project": true
+    },
+    "buttons-are-buttons": {
+      "name": "Actions use buttons and navigation uses links",
+      "category": "controls",
+      "requirement": "recommended",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "4.1.2"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "Elements that perform actions are buttons; elements that navigate are links. Clickable divs and spans are not used.",
+      "check": "Fail an element with a click handler that is not a native interactive element and has no interactive role and tabindex.",
+      "a11y-project": true
+    },
+    "form-labels": {
+      "name": "Form fields are labelled",
+      "category": "forms",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "1.3.1",
+        "3.3.2",
+        "4.1.2"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "Every form control has a visible label that is programmatically associated with it.",
+      "check": "Fail an input, select or textarea (other than hidden, submit, reset, button or image) with no label[for], wrapping label, aria-labelledby or aria-label. Placeholder text alone is not a label.",
+      "a11y-project": true
+    },
+    "error-identification": {
+      "name": "Errors are identified and explained",
+      "category": "forms",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "3.3.1",
+        "3.3.3"
+      ],
+      "wcag-level": "AA",
+      "basis": "wcag-defined",
+      "detection": [
+        "manual-review"
+      ],
+      "rule": "Input errors are described in text next to the field, the field is marked invalid, and a suggested correction is given when known.",
+      "check": "Submit each form with invalid input. Fail errors shown by color or icon only, or not associated with the field.",
+      "a11y-project": true
+    },
+    "input-purpose": {
+      "name": "Personal-data fields declare their purpose",
+      "category": "forms",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "1.3.5"
+      ],
+      "wcag-level": "AA",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "Fields that collect information about the person (name, email, phone, address, etc.) have the matching autocomplete value.",
+      "check": "Fail a field whose name, id, type or label identifies a personal-data purpose and whose autocomplete is absent or does not match it.",
+      "a11y-project": true
+    },
+    "video-captions": {
+      "name": "Videos have captions",
+      "category": "media",
+      "requirement": "required",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "1.2.2",
+        "1.2.4"
+      ],
+      "wcag-level": "AA",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis",
+        "manual-review"
+      ],
+      "rule": "Prerecorded and live video with audio has synchronized captions.",
+      "check": "Fail a <video> with an audio track and no <track kind=\"captions\"> (or kind=\"subtitles\" with captions), and embedded players with captions turned off or unavailable.",
+      "a11y-project": true
+    },
+    "audio-transcripts": {
+      "name": "Audio has a transcript",
+      "category": "media",
+      "requirement": "required",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "1.2.1"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "manual-review"
+      ],
+      "rule": "Prerecorded audio-only content has a text transcript.",
+      "check": "Review each audio element or podcast embed for a transcript on the page or linked next to it.",
+      "a11y-project": true
+    },
+    "media-controls": {
+      "name": "Media can be paused and audio does not autoplay",
+      "category": "media",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "1.4.2",
+        "2.1.1"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "code-analysis",
+        "rendered-analysis"
+      ],
+      "rule": "Audio that plays automatically for more than 3 seconds can be paused or muted, and media players have keyboard-operable controls.",
+      "check": "Fail <audio> or <video> with autoplay and sound that has no controls, and a custom player whose controls are not keyboard operable.",
+      "a11y-project": true
+    },
+    "color-not-sole-indicator": {
+      "name": "Color is not the only cue",
+      "category": "appearance",
+      "requirement": "required",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "1.4.1"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "rendered-analysis",
+        "manual-review"
+      ],
+      "rule": "Information, state and required fields are not conveyed by color alone.",
+      "check": "View the page in grayscale. Fail any status, error, required marker, chart series or link that can no longer be told apart.",
+      "a11y-project": true
+    },
+    "text-resize": {
+      "name": "Text can be resized to 200%",
+      "category": "appearance",
+      "requirement": "required",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "1.4.4"
+      ],
+      "wcag-level": "AA",
+      "basis": "wcag-defined",
+      "detection": [
+        "rendered-analysis"
+      ],
+      "rule": "Text can be enlarged to 200% without loss of content or function.",
+      "check": "Zoom to 200%. Fail content that is clipped, overlaps, or disappears.",
+      "a11y-project": true
+    },
+    "reflow": {
+      "name": "Content reflows at narrow widths",
+      "category": "appearance",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "1.4.10"
+      ],
+      "wcag-level": "AA",
+      "basis": "wcag-defined",
+      "detection": [
+        "rendered-analysis"
+      ],
+      "rule": "Content fits a 320 CSS pixel wide viewport without horizontal scrolling, except content that needs two dimensions such as maps, data tables and diagrams.",
+      "check": "Render at 320 CSS px wide (or 1280 px at 400% zoom). Fail when the page scrolls horizontally outside two-dimensional content.",
+      "a11y-project": true,
+      "parameters": {
+        "viewport-width": {
+          "default": 320,
+          "unit": "css-px",
+          "overridable": false,
+          "description": "Viewport width at which content must reflow."
+        }
+      }
+    },
+    "text-spacing": {
+      "name": "Text spacing can be increased",
+      "category": "appearance",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "1.4.12"
+      ],
+      "wcag-level": "AA",
+      "basis": "wcag-defined",
+      "detection": [
+        "rendered-analysis"
+      ],
+      "rule": "No content or function is lost when line height is 1.5, paragraph spacing 2, letter spacing 0.12 and word spacing 0.16 times the font size.",
+      "check": "Apply the text spacing overrides. Fail text that is clipped or overlaps.",
+      "a11y-project": true
+    },
+    "body-font-size": {
+      "name": "Body text is a readable size",
+      "category": "appearance",
+      "requirement": "recommended",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [],
+      "wcag-level": "none",
+      "basis": "schemafirst-default",
+      "detection": [
+        "rendered-analysis"
+      ],
+      "rule": "Visible body text is rendered within the minimum and maximum pixel sizes.",
+      "check": "Fail visible body text whose computed font size is below `min-px` or above `max-px`.",
+      "a11y-project": true,
+      "parameters": {
+        "min-px": {
+          "default": 12,
+          "unit": "css-px",
+          "overridable": true,
+          "description": "Smallest permitted computed font size for body text."
+        },
+        "max-px": {
+          "default": 48,
+          "unit": "css-px",
+          "overridable": true,
+          "description": "Largest permitted computed font size for body text."
+        }
+      }
+    },
+    "no-flashing": {
+      "name": "Nothing flashes more than three times a second",
+      "category": "animation",
+      "requirement": "required",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "2.3.1"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "rendered-analysis"
+      ],
+      "rule": "No content flashes more than three times in any one-second period, unless the flash is below the general and red flash thresholds.",
+      "check": "Analyze animations, video and GIFs. Fail more than 3 flashes in any 1 second window above the thresholds.",
+      "a11y-project": true
+    },
+    "pause-stop-hide": {
+      "name": "Moving content can be paused",
+      "category": "animation",
+      "requirement": "required",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "2.2.2"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "rendered-analysis"
+      ],
+      "rule": "Content that moves, blinks, scrolls or auto-updates by itself for more than 5 seconds, alongside other content, can be paused, stopped or hidden.",
+      "check": "Fail an infinite or longer-than-`max-auto-motion-ms` animation, looping video or animated GIF without a pause control.",
+      "a11y-project": true,
+      "parameters": {
+        "max-auto-motion-ms": {
+          "default": 5000,
+          "unit": "ms",
+          "overridable": false,
+          "description": "Longest automatic motion allowed without a pause mechanism."
+        }
+      }
+    },
+    "reduced-motion": {
+      "name": "Animation respects reduced-motion preference",
+      "category": "animation",
+      "requirement": "recommended",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "2.3.3"
+      ],
+      "wcag-level": "AAA",
+      "basis": "wcag-defined",
+      "detection": [
+        "rendered-analysis"
+      ],
+      "rule": "Non-essential motion triggered by interaction or on load is removed or reduced when the person has set prefers-reduced-motion: reduce.",
+      "check": "Render with prefers-reduced-motion: reduce. Fail non-essential animations and transitions that still run.",
+      "a11y-project": true
+    },
+    "text-contrast": {
+      "name": "Text has enough contrast",
+      "category": "color-contrast",
+      "requirement": "required",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "1.4.3"
+      ],
+      "wcag-level": "AA",
+      "basis": "wcag-defined",
+      "detection": [
+        "rendered-analysis"
+      ],
+      "rule": "Text and images of text have a contrast ratio of at least 4.5:1 with their background; large text (at least 24 CSS px, or 18.66 CSS px bold) at least 3:1.",
+      "check": "Measure every visible text node against its rendered background. Fail ratios below `normal-text-ratio` for normal text or `large-text-ratio` for large text.",
+      "a11y-project": true,
+      "parameters": {
+        "normal-text-ratio": {
+          "default": 4.5,
+          "unit": "ratio",
+          "overridable": true,
+          "description": "Minimum contrast for normal text. May be raised, never lowered."
+        },
+        "large-text-ratio": {
+          "default": 3,
+          "unit": "ratio",
+          "overridable": true,
+          "description": "Minimum contrast for large text. May be raised, never lowered."
+        }
+      }
+    },
+    "non-text-contrast": {
+      "name": "Controls and graphics have enough contrast",
+      "category": "color-contrast",
+      "requirement": "required",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "1.4.11"
+      ],
+      "wcag-level": "AA",
+      "basis": "wcag-defined",
+      "detection": [
+        "rendered-analysis"
+      ],
+      "rule": "The visual boundaries and states of controls (inputs, buttons, checkboxes, focus indicators) and the parts of graphics needed to understand them have at least 3:1 contrast against adjacent colors.",
+      "check": "Fail a control whose strongest boundary cue (border or fill) is below `ui-ratio` against what surrounds it.",
+      "a11y-project": true,
+      "parameters": {
+        "ui-ratio": {
+          "default": 3,
+          "unit": "ratio",
+          "overridable": true,
+          "description": "Minimum non-text contrast. May be raised, never lowered."
+        }
+      }
+    },
+    "target-size": {
+      "name": "Tap targets are large enough",
+      "category": "mobile-and-touch",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "2.5.8"
+      ],
+      "wcag-level": "AA",
+      "basis": "wcag-defined",
+      "detection": [
+        "rendered-analysis"
+      ],
+      "rule": "Pointer targets are at least 24 by 24 CSS pixels, or are spaced so a 24 px circle centered on each does not overlap another target. Inline links in text are exempt.",
+      "check": "Fail a target smaller than `min-px` in either dimension that does not meet the spacing exception.",
+      "a11y-project": true,
+      "parameters": {
+        "min-px": {
+          "default": 24,
+          "unit": "css-px",
+          "overridable": true,
+          "description": "Minimum target size. May be raised, never lowered."
+        }
+      }
+    },
+    "orientation": {
+      "name": "Content works in both orientations",
+      "category": "mobile-and-touch",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "1.3.4"
+      ],
+      "wcag-level": "AA",
+      "basis": "wcag-defined",
+      "detection": [
+        "rendered-analysis"
+      ],
+      "rule": "Content is not locked to portrait or landscape unless an orientation is essential.",
+      "check": "Render in both orientations. Fail content that is hidden or unusable in one.",
+      "a11y-project": true
+    },
+    "pointer-gestures": {
+      "name": "Gestures have a single-pointer alternative",
+      "category": "mobile-and-touch",
+      "requirement": "required",
+      "applies-to": [
+        "page"
+      ],
+      "wcag": [
+        "2.5.1",
+        "2.5.7"
+      ],
+      "wcag-level": "AA",
+      "basis": "wcag-defined",
+      "detection": [
+        "manual-review"
+      ],
+      "rule": "Functions that use multipoint, path-based or dragging gestures can also be done with a single tap or click.",
+      "check": "Review swipe carousels, sliders, maps and drag-and-drop for a single-pointer alternative.",
+      "a11y-project": true
+    },
+    "screen-reader-review": {
+      "name": "Works with screen readers",
+      "category": "assistive-technology",
+      "requirement": "required",
+      "applies-to": [
+        "page",
+        "email"
+      ],
+      "wcag": [
+        "1.3.1",
+        "4.1.2"
+      ],
+      "wcag-level": "A",
+      "basis": "wcag-defined",
+      "detection": [
+        "manual-review"
+      ],
+      "rule": "Content reads in a meaningful order, and every interactive element announces its name, role and state with current screen readers.",
+      "check": "Test with at least one screen reader per platform in scope (for example NVDA or JAWS on Windows, VoiceOver on macOS and iOS, TalkBack on Android).",
+      "a11y-project": false
+    },
+    "email-images-off-legible": {
+      "name": "Email is legible with images off",
+      "category": "email",
+      "requirement": "optional",
+      "applies-to": [
+        "email"
+      ],
+      "wcag": [],
+      "wcag-level": "none",
+      "basis": "schemafirst-default",
+      "detection": [
+        "rendered-analysis"
+      ],
+      "rule": "The email's message and calls to action are readable with images blocked: key text is live text and images have alt text.",
+      "check": "Render with images blocked. Fail when the main message or primary call to action is lost.",
+      "a11y-project": false
+    },
+    "email-plain-text-part": {
+      "name": "Email includes a plain-text part",
+      "category": "email",
+      "requirement": "recommended",
+      "applies-to": [
+        "email"
+      ],
+      "wcag": [],
+      "wcag-level": "none",
+      "basis": "schemafirst-default",
+      "detection": [
+        "code-analysis"
+      ],
+      "rule": "HTML email is sent as multipart/alternative with a text/plain part that carries the same message and links.",
+      "check": "Fail an HTML email with no text/plain part, or one that is empty.",
+      "a11y-project": false
+    }
+  },
+  "evaluation": {
+    "steps": [
+      "Select every rule whose `applies-to` includes `subject-type`, narrowed to `rules` if supplied.",
+      "Apply the organization profile, if any.",
+      "For each rule, use the first detection method in `detection` the evaluator supports. Never guess a result the method cannot decide.",
+      "Report one result per rule using `result-statuses`, with evidence for every `fail` and `requires-review`.",
+      "Report the subject as conforming only when every applicable `required` rule is `pass` or `not-applicable`."
+    ],
+    "missing-context": {
+      "behavior": "Do not guess. Return a requires-context response listing every missing required input.",
+      "response": {
+        "status": "requires-context",
+        "missing": [
+          "subject-type"
+        ]
+      }
+    },
+    "unknown-rule": {
+      "behavior": "Do not substitute a different rule. Return an unknown-rule response.",
+      "response": {
+        "status": "unknown-rule",
+        "rule": "<input>"
+      }
+    },
+    "success-response": {
+      "status": "ok",
+      "standard-version": "0.1.0",
+      "subject-type": "page",
+      "conforms": false,
+      "results": {
+        "page-language": {
+          "status": "pass"
+        },
+        "images-alt-present": {
+          "status": "fail",
+          "evidence": [
+            {
+              "selector": "main > img:nth-of-type(2)",
+              "detail": "img has no alt attribute"
+            }
+          ]
+        },
+        "alt-text-descriptive": {
+          "status": "requires-review"
+        }
+      }
+    }
+  },
+  "result-statuses": {
+    "pass": "The rule was evaluated and no failure was found.",
+    "fail": "At least one failure was found. Evidence identifies each one.",
+    "not-applicable": "Nothing in the subject is in the rule's scope (for example, no images).",
+    "requires-review": "The rule applies but the evaluator could not decide it. A person must review it."
+  },
+  "provenance-classes": {
+    "wcag-defined": "The rule restates a WCAG 2.2 success criterion; WCAG's normative text and Understanding documents govern its meaning.",
+    "schemafirst-default": "A SchemaFirst decision made for deterministic evaluation, beyond what WCAG requires. Not authored or endorsed by the W3C.",
+    "organization-defined": "Values supplied by the adopting organization through an explicit organization profile. Whether a value may be replaced is stated by each parameter's `overridable`."
+  },
+  "organization-profile": {
+    "may": [
+      "Raise a rule's `requirement` (optional to recommended, recommended to required).",
+      "Change a parameter whose `overridable` is true, only in the stricter direction for wcag-defined rules.",
+      "Enable optional rules."
+    ],
+    "must-not": [
+      "Lower the `requirement` of a wcag-defined rule at level A or AA.",
+      "Loosen a wcag-defined threshold.",
+      "Rename rules or change result statuses."
+    ],
+    "example": {
+      "requirements": {
+        "plain-language": "recommended"
+      },
+      "parameters": {
+        "text-contrast": {
+          "normal-text-ratio": 7
+        }
+      }
+    }
+  },
+  "versioning": {
+    "scheme": "semver",
+    "breaking-changes-require-major": [
+      "Removing or renaming a rule",
+      "Raising a rule's default requirement",
+      "Tightening a default parameter",
+      "Result statuses or response shape"
+    ],
+    "non-breaking": [
+      "Adding a recommended or optional rule",
+      "Adding a detection method to a rule",
+      "Clarifying a rule's check without changing outcomes"
+    ]
+  },
+  "references": [
+    {
+      "title": "Web Content Accessibility Guidelines (WCAG) 2.2",
+      "url": "https://www.w3.org/TR/WCAG22/",
+      "covers": "Normative success criteria every wcag-defined rule restates"
+    },
+    {
+      "title": "Understanding WCAG 2.2",
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/",
+      "covers": "Intent, examples and failure techniques (F30, F63, ...) cited by rule checks"
+    },
+    {
+      "title": "WAI-ARIA Authoring Practices Guide",
+      "url": "https://www.w3.org/WAI/ARIA/apg/",
+      "covers": "Keyboard and ARIA patterns for custom widgets"
+    },
+    {
+      "title": "The A11Y Project Checklist",
+      "url": "https://www.a11yproject.com/checklist/",
+      "covers": "Category structure and practical coverage; rules marked `a11y-project` correspond to a checklist item"
+    }
+  ]
+}
